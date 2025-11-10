@@ -113,6 +113,7 @@ jobs:
           requests \
           pandas \
           unittest-parallel \
+          coverage
 
     - name: Build Python Package
       run: |
@@ -127,14 +128,16 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v
+        coverage run -m unittest-parallel -t . -s tests -v
+        coverage xml
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
       run: |
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v
+        coverage run -m unittest-parallel -t . -s tests -v
+        coverage xml
 
     - name: Run Federated Python Tests
       if: ${{ matrix.test_mode == 'federated' }}
@@ -176,3 +179,12 @@ jobs:
         kill $KA 
         cd src/main/python
         python -m unittest discover -s tests/scuro -p 'test_*.py' -v
+
+    - name: Coverage comment
+      if: ${{ matrix.test_mode == 'env' }}
+      uses: py-cov-action/python-coverage-comment-action@v3
+      with:
+        GITHUB_TOKEN: ${{ github.token }}
+        COVERAGE_DATA_PATH: src/main/python/coverage.xml
+        MINIMUM_GREEN: 80
+        MINIMUM_ORANGE: 70
