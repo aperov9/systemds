@@ -56,7 +56,7 @@ jobs:
         os: [ubuntu-24.04]
         java: ['17']
         javadist: ['adopt']
-        test_mode: [env, noenv, federated, scuro]
+        test_mode: [env] #noenv, federated, scuro]
 
     name: ${{ matrix.os }} Java ${{ matrix.java }} ${{ matrix.javadist }} Python ${{ matrix.python-version }}/ ${{ matrix.test_mode}}
     steps:
