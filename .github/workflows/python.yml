@@ -128,7 +128,7 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        coverage run -m unittest-parallel -t . -s tests -v
+        unittest-parallel -t . -s tests -v
         coverage xml
 
     - name: Run tests no env
@@ -136,7 +136,7 @@ jobs:
       run: |
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
-        coverage run -m unittest-parallel -t . -s tests -v
+        unittest-parallel -t . -s tests -v
         coverage xml
 
     - name: Run Federated Python Tests
@@ -180,11 +180,11 @@ jobs:
         cd src/main/python
         python -m unittest discover -s tests/scuro -p 'test_*.py' -v
 
-    - name: Coverage comment
-      if: ${{ matrix.test_mode == 'env' }}
-      uses: py-cov-action/python-coverage-comment-action@v3
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
       with:
-        GITHUB_TOKEN: ${{ github.token }}
-        COVERAGE_DATA_PATH: src/main/python/coverage.xml
-        MINIMUM_GREEN: 80
-        MINIMUM_ORANGE: 70
+        file: src/main/python/coverage.xml
+        flags: python
+        name: python-coverage
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
