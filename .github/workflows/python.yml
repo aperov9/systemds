@@ -181,16 +181,35 @@ jobs:
         python -m unittest discover -s tests/scuro -p 'test_*.py' -v
 
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v5.5.1
+      if: github.repository_owner == 'aperov9'
       with:
-        file: src/main/python/coverage.xml
+        fail_ci_if_error: false
+        files: src/main/python/coverage.xml
         flags: python
         name: python-coverage
-        fail_ci_if_error: false
         token: ${{ secrets.CODECOV_TOKEN }}
-    
-    - name: Upload test results to Codecov
-      if: ${{ !cancelled() }}
-      uses: codecov/test-results-action@v1
+
+    - name: Upload Coverage Report Artifact PR
+      if: (github.repository_owner == 'aperov9') && (github.ref_name != 'main')
+      uses: actions/upload-artifact@v5
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        name: Python Code Coverage
+        path: src/main/python/coverage.xml
+        retention-days: 7
+
+    - name: Upload Coverage Report Artifact Main
+      if: (github.repository_owner == 'aperov9') && (github.ref_name == 'main')
+      uses: actions/upload-artifact@v5
+      with:
+        name: Python Code Coverage
+        path: src/main/python/coverage.xml
+        retention-days: 30
+
+    - name: Upload Coverage Report Artifact Fork
+      if: (github.repository_owner != 'aperov9')
+      uses: actions/upload-artifact@v5
+      with:
+        name: Python Code Coverage
+        path: src/main/python/coverage.xml
+        retention-days: 3 

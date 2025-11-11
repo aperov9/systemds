@@ -153,10 +153,12 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5.5.1
-      if: github.repository_owner == 'apache'
+      if: github.repository_owner == 'aperov9'
       with:
         fail_ci_if_error: false
         files: target/site/jacoco/jacoco.xml
+        flags: java
+        name: java-coverage
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Upload Jacoco Report Artifact PR
