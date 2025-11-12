@@ -129,7 +129,6 @@ jobs:
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
         unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage-${{ matrix.test_mode }}.xml
-        coverage xml
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
@@ -137,7 +136,6 @@ jobs:
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
         unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage-${{ matrix.test_mode }}.xml
-        coverage xml
 
     - name: Run Federated Python Tests
       if: ${{ matrix.test_mode == 'federated' }}
