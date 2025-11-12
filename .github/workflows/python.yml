@@ -128,16 +128,14 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v --coverage
-        mv .coverage .coverage.${{ matrix.test_mode }}
+        coverage run --data-file=".coverage.${{ matrix.test_mode }}" -m unittest-parallel -t . -s tests -v  
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
       run: |
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v --coverage
-        mv .coverage .coverage.${{ matrix.test_mode }}
+        coverage run --data-file=".coverage.${{ matrix.test_mode }}" -m unittest-parallel -t . -s tests -v
 
     - name: Run Federated Python Tests
       if: ${{ matrix.test_mode == 'federated' }}
