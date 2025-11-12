@@ -128,7 +128,8 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage-${{ matrix.test_mode }}.xml
+        unittest-parallel -t . -s tests -v --coverage
+        coverage xml -o "coverage-${{ matrix.test_mode }}.xml"
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
