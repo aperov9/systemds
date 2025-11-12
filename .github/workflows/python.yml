@@ -128,7 +128,7 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage/coverage-${{ matrix.test_mode }}.xml
+        unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage-${{ matrix.test_mode }}.xml
         coverage xml
 
     - name: Run tests no env
@@ -136,7 +136,7 @@ jobs:
       run: |
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
-        unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage/coverage-${{ matrix.test_mode }}.xml
+        unittest-parallel -t . -s tests -v --coverage --coverage-xml coverage-${{ matrix.test_mode }}.xml
         coverage xml
 
     - name: Run Federated Python Tests
@@ -217,19 +217,19 @@ jobs:
     - name: Download all Python Coverage Artifacts
       uses: actions/download-artifact@v6
       with:
-        path: src/main/python/coverage/
+        path: src/main/python/
     
     - name: Merge Python Coverage Reports
       run: |
-        coverage combine src/main/python/coverage/coverage-*.xml
-        coverage xml -o src/main/python/coverage/coverage.xml
+        coverage combine src/main/python/coverage-*.xml
+        coverage xml -o src/main/python/coverage.xml
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5.5.1
       if: github.repository_owner == 'aperov9'
       with:
         fail_ci_if_error: false
-        files: src/main/python/coverage/coverage.xml
+        files: src/main/python/coverage.xml
         flags: python
         name: python-coverage
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -239,7 +239,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage/coverage.xml
+        path: src/main/python/coverage.xml
         retention-days: 7
 
     - name: Upload Coverage Report Artifact Main
@@ -247,7 +247,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage/coverage.xml
+        path: src/main/python/coverage.xml
         retention-days: 30
 
     - name: Upload Coverage Report Artifact Fork
@@ -255,7 +255,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage/coverage.xml
+        path: src/main/python/coverage.xml
         retention-days: 3
     
     - name: Upload Coverage Report Artifact Fork
@@ -263,7 +263,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage/coverage-env.xml
+        path: src/main/python/coverage-env.xml
         retention-days: 3
 
     - name: Upload Coverage Report Artifact Fork
@@ -271,5 +271,5 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage/coverage-noenv.xml
+        path: src/main/python/coverage-noenv.xml
         retention-days: 3
