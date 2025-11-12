@@ -129,7 +129,7 @@ jobs:
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
         unittest-parallel -t . -s tests -v --coverage
-        coverage xml -o "coverage-${{ matrix.test_mode }}.xml"
+        mv .coverage .coverage.${{ matrix.test_mode }}
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
@@ -137,7 +137,7 @@ jobs:
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
         unittest-parallel -t . -s tests -v --coverage
-        coverage xml -o "coverage-${{ matrix.test_mode }}.xml"
+        mv .coverage .coverage.${{ matrix.test_mode }}
 
     - name: Run Federated Python Tests
       if: ${{ matrix.test_mode == 'federated' }}
@@ -183,8 +183,8 @@ jobs:
     - name: Save Python Test Coverage as Artifact
       uses: actions/upload-artifact@v5
       with:
-        name: coverage-${{ matrix.test_mode }}.xml
-        path: src/main/python/coverage-${{ matrix.test_mode }}.xml
+        name: coverage-${{ matrix.test_mode }}-data
+        path: src/main/python/.coverage.${{ matrix.test_mode }}
         retention-days: 1
   
   determine_test_coverage:
@@ -221,8 +221,10 @@ jobs:
     
     - name: Merge Python Coverage Reports
       run: |
-        coverage combine src/main/python/coverage-*.xml
-        coverage xml -o src/main/python/coverage.xml
+        cd src/main/python
+        find . -name ".coverage.*" -exec mv {} .coverage.{} \;
+        coverage combine
+        coverage xml -o coverage.xml
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5.5.1
