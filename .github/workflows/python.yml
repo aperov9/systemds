@@ -232,7 +232,11 @@ jobs:
     
     - name: Merge Python Coverage Reports
       run: |
+        pwd
+        ls -la
         cd src/main/python
+        pwd
+        ls -la
         coverage combine .coverage-*
         coverage xml -o coverage.xml
 
