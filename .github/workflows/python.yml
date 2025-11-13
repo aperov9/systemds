@@ -181,16 +181,11 @@ jobs:
         kill $KA 
         cd src/main/python
         python -m unittest discover -s tests/scuro -p 'test_*.py' -v
-    
-    - name: Debug file location
-      run: |
-        pwd
-        ls -la src/main/python/.coverage-*
 
     - name: Save Python Test Coverage as Artifact
       uses: actions/upload-artifact@v5
       with:
-        name: coverage-${{ matrix.test_mode }}-data
+        name: .coverage-${{ matrix.test_mode }}
         include-hidden-files: true
         path: ${{ github.workspace }}/src/main/python/.coverage-${{ matrix.test_mode }}
         retention-days: 1
@@ -225,6 +220,7 @@ jobs:
     - name: Download all Python Coverage Artifacts
       uses: actions/download-artifact@v6
       with:
+        pattern: .coverage-*
         path: src/main/python/
     
     - name: Merge Python Coverage Reports
@@ -265,20 +261,4 @@ jobs:
       with:
         name: Python Code Coverage
         path: src/main/python/coverage.xml
-        retention-days: 3
-    
-    - name: Upload Coverage Report Artifact Fork
-      if: (github.repository_owner != 'aperov9')
-      uses: actions/upload-artifact@v5
-      with:
-        name: Python Code Coverage
-        path: src/main/python/.coverage-env.xml
-        retention-days: 3
-
-    - name: Upload Coverage Report Artifact Fork
-      if: (github.repository_owner != 'aperov9')
-      uses: actions/upload-artifact@v5
-      with:
-        name: Python Code Coverage
-        path: src/main/python/.coverage-noenv.xml
         retention-days: 3
