@@ -129,7 +129,9 @@ jobs:
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
         unittest-parallel -t . -s tests -v --coverage
+        ls -la
         mv .coverage .coverage-${{ matrix.test_mode }}
+        ls -la
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
