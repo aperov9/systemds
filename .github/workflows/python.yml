@@ -221,7 +221,14 @@ jobs:
       uses: actions/download-artifact@v6
       with:
         pattern: .coverage-*
-        path: src/main/python/
+        path: ${{ github.workspace }}/src/main/python/
+    
+    - name: Install coverage package
+      run: |
+        pwd
+        ls -la
+        pwd
+        ls -la src/main/python/
     
     - name: Merge Python Coverage Reports
       run: |
