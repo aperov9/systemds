@@ -56,7 +56,7 @@ jobs:
         os: [ubuntu-24.04]
         java: ['17']
         javadist: ['adopt']
-        test_mode: [env, noenv]  #, federated, scuro]
+        test_mode: [env, noenv, scuro]  #, federated, ]
 
     name: ${{ matrix.os }} Java ${{ matrix.java }} ${{ matrix.javadist }} Python ${{ matrix.python-version }}/ ${{ matrix.test_mode}}
     steps:
@@ -178,7 +178,8 @@ jobs:
           nltk
         kill $KA 
         cd src/main/python
-        python -m unittest discover -s tests/scuro -p 'test_*.py' -v
+        coverage run -m unittest discover -s tests/scuro -p 'test_*.py' -v
+        mv .coverage .coverage.${{ matrix.test_mode }}
 
     - name: Save Python Test Coverage as Artifact
       uses: actions/upload-artifact@v5
@@ -228,7 +229,7 @@ jobs:
         cd src/main/python
         pwd
         ls -la
-        coverage combine
+        coverage combine .coverage.*
         coverage xml -o coverage.xml
 
     - name: Upload coverage reports to Codecov
