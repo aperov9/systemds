@@ -182,11 +182,16 @@ jobs:
         cd src/main/python
         python -m unittest discover -s tests/scuro -p 'test_*.py' -v
     
+    - name: Debug file location
+      run: |
+        pwd
+        ls -la src/main/python/.coverage-*
+
     - name: Save Python Test Coverage as Artifact
       uses: actions/upload-artifact@v5
       with:
         name: coverage-${{ matrix.test_mode }}-data
-        path: src/main/python/.coverage-${{ matrix.test_mode }}
+        path: ${{ github.workspace }}/src/main/python/.coverage-${{ matrix.test_mode }}
         retention-days: 1
   
   determine_test_coverage:
