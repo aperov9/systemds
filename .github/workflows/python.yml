@@ -128,14 +128,16 @@ jobs:
         export SYSDS_QUIET=1
         export LOG4JPROP=$SYSTEMDS_ROOT/src/test/resources/log4j.properties
         cd src/main/python
-        coverage run --data-file=".coverage.${{ matrix.test_mode }}" -m unittest-parallel -t . -s tests -v  
+        unittest-parallel -t . -s tests -v --coverage
+        mv .coverage .coverage-${{ matrix.test_mode }}
 
     - name: Run tests no env
       if: ${{ matrix.test_mode == 'noenv' }}
       run: |
         export LOG4JPROP=$(pwd)/src/test/resources/log4j.properties
         cd src/main/python
-        coverage run --data-file=".coverage.${{ matrix.test_mode }}" -m unittest-parallel -t . -s tests -v
+        unittest-parallel -t . -s tests -v --coverage
+        mv .coverage .coverage-${{ matrix.test_mode }}
 
     - name: Run Federated Python Tests
       if: ${{ matrix.test_mode == 'federated' }}
@@ -182,7 +184,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: coverage-${{ matrix.test_mode }}-data
-        path: src/main/python/.coverage.${{ matrix.test_mode }}
+        path: src/main/python/.coverage-${{ matrix.test_mode }}
         retention-days: 1
   
   determine_test_coverage:
@@ -220,7 +222,6 @@ jobs:
     - name: Merge Python Coverage Reports
       run: |
         cd src/main/python
-        find . -name ".coverage.*" -exec mv {} .coverage.{} \;
         coverage combine
         coverage xml -o coverage.xml
 
@@ -263,7 +264,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage-env.xml
+        path: src/main/python/.coverage-env.xml
         retention-days: 3
 
     - name: Upload Coverage Report Artifact Fork
@@ -271,5 +272,5 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: Python Code Coverage
-        path: src/main/python/coverage-noenv.xml
+        path: src/main/python/.coverage-noenv.xml
         retention-days: 3
