@@ -191,6 +191,7 @@ jobs:
       uses: actions/upload-artifact@v5
       with:
         name: coverage-${{ matrix.test_mode }}-data
+        include-hidden-files: true
         path: ${{ github.workspace }}/src/main/python/.coverage-${{ matrix.test_mode }}
         retention-days: 1
   
