@@ -22,7 +22,6 @@
 name: Java Test
 
 on:
-  workflow_dispatch: {}
   push:
     paths-ignore:
       - 'docs/**'
@@ -158,7 +157,6 @@ jobs:
         fail_ci_if_error: false
         files: target/site/jacoco/jacoco.xml
         flags: java
-        name: java-coverage
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Upload Jacoco Report Artifact PR
